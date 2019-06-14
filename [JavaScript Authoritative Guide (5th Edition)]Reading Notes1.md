@@ -293,3 +293,55 @@ a instanceof RegExp;//false
 
 
 
+**字符串运算符**
+
+```js
+1+2//3
+"1"+2//"12"
+"1"+"2"//"12"
+11<3//false
+"11"<"3"//true 
+"11"<3//false  "11"=>11
+"one"<3//false  "one"=>NaN
+s=1+2+" hello";//"3 hello"
+t="hello "+1+2;//"hello 12"
+```
+
+**赋值运算符**
+
+| 运算符  | 示例      | 等价等式   |
+| ------- | --------- | ---------- |
+| +=      | a+=b      | a=a+b      |
+| -=      | a-=b      | a=a-b      |
+| *=      | a*=b      | a=a*b      |
+| /=      | a/=b      | a=a/b      |
+| %=      | a%=b      | a=a%b      |
+| \<\<=   | a\<\<=b   | a=a\<\<b   |
+| \>\>=   | a\>\>=b   | a=a\>\>b   |
+| \>\>\>= | a\>\>\>=b | a=a\>\>\>b |
+| &=      | a&=b      | a=a&b      |
+| \|=     | a\|=b     | a=a\|b     |
+| ^=      | a^=b      | a=a^b      |
+
+**typeof运算符**
+
+一元运算符，放在运算数之前，运算数可以是任何类型，返回一个字符串说明该运算数类型。
+
+```js
+typeof 123;//number
+typeof 'abc';//string
+typeof true;//boolean
+typeof {x:1,y:2};//object
+typeof [1,2,3];//object
+typeof null;//object
+function f(x){return x*x;}
+typeof f;//function
+var unValue;
+typeof unValue;//undefined
+typeof new Number(123);//object
+typeof new String("abc");//object
+typeof new Boolean(true);//object
+typeof new Date();//object
+typeof /java/;//object
+```
+
