@@ -345,3 +345,339 @@ typeof new Date();//object
 typeof /java/;//object
 ```
 
+**delete运算符**
+
+delete运算符见删除运算数说制定的对象的属性、数组元素或变量。如果删除操作成功，返回true，否则返回false。并非所有的属性和变量都可以删除的，某些内部核心属性和客户端属性不能删除，用var声明的用户定义变量也不能删除。如果delete使用的运算数是一个不存在的属性，返回true。ECMAScript标准规定，当delete的运算数不是属性、数组元素或变量时返回true。
+
+注意：删除属性、变量或数组元素不只是把他们的值设置为undefined，当删除一个属性后，该属性将不再存在。
+
+delete所能影响的只是属性的值，并不能影响被这些属性引用的对象。
+
+```js
+var o={x:1,y:2};
+delete o.x;//true
+typeof o.x;//undefined
+delete o.x;//true   o.x =》不存在
+delete o;//不能删除已声明的变量，false
+delete 1;//不能删除整数，true
+x=1;
+delete x;//true
+console.log(x);//Runtime error:x is not defined
+```
+
+
+
+**void运算符**
+
+void可以出现再任何类型的操作数之前，它总是舍弃运算数的值，然后返回undefined。
+
+void的另一个用途是专门生成undefined值。
+
+
+
+### 第6章 语句
+
+```js
+//表达式语句
+s="Hello "+name;
+i*=3;
+counter++;
+delete o.x;
+alert("Welcome, "+name);
+window.close();
+Math.cos(x);
+cx=Math.cos(x);
+//复合语句
+{
+    x=Math.PI;
+    cx=Math.cos(x);
+    alert("cos("+x+")="+cx);
+}
+```
+
+正式的Javascript语法规定每个复合语句可以包含一个子语句，那么使用语句块，就可以将任意数量的 语句放在这个子语句中。
+
+Javascript解释器执行符合语句是，只是一句一句的按照编写顺序执行它的语句，通常JavaScript解释器会执行说有的语句，但再后写情况下，复合语句会意外终止。发生这种终止情况主要是由于复合语句含有break语句、continue语句，return语句或throw语句，或者它引发了错误，或者它调用的函数引发了不能捕捉的错误或抛出了不饿能捕捉的异常。
+
+**if语句**
+
+```js
+//第一种形式 
+if(username=="")
+username="test";
+
+if((address==null)||(address=="")){
+address="undefined";
+alert("Please specify a mailing address");
+ }
+
+//第二种形式
+
+ if(username!=null)
+     alert("Hello "+username+"\n Welcome to my blog.");
+else{
+    username=prompt("Welcome!\n What is your name?");
+    alert("Hello "+username);
+}
+//第三种形式
+if(n%3==0)
+    alert("Num:"+n+" is  a multiple of 3");
+else if(n%2==0)
+    alert("Num:"+n+" is  a multiple of 2");
+else 
+    alert("Num:"+n+" is not a multiple of 3 or 2");
+```
+
+**switch语句**
+
+```js
+function convert(x){
+    switch(typeof x){
+        case "number":
+            return x.toString(16);
+        case "string":
+            return '"'+x+'"';
+        case "boolean":
+            return x.toString().toUpperCase();
+        default:
+            return x.toString();
+    }
+}
+
+//case 关键字后跟随的是数字和字符串的直接量，但ECMAscript v3标准允许跟随任意表达式
+case 60*60*24:
+case Math.PI:
+case n+1:
+case a[0]:
+```
+
+switch语句首先计算switch关键字后的表达式，然后按照出现的顺序计算case后的表达式，知道找到与switch表达式的值相匹配的case表达式位置。由于匹配case表达式时用===等同运算符判定的，而不是==相等运算符判定的，所以表达式必须时没有类型转换的情况下进行匹配。
+
+**while语句**
+
+
+
+```js
+while(expression) 
+    statement
+
+var count=0;
+while(count<10){
+    console.log(count);//0~9
+    count++;
+}
+console.log(count);//10
+```
+
+while先计算expression的值，如果是false，转而执行下一条语句，如果是true，执行循环体statement，重复计算expression判定是否执行循环体。
+
+注意：while(true)会创建一个无线循环。
+
+**do/while语句**
+
+do/while循环和while循环相似，do/while是底部检测循环表达式，意味着循环体至少会被执行一次,while是循环顶部检测循环表达式。
+
+两者的区别：
+
+（1）do循环要求必须使用关键字do来标识循环的开头，用关键字while来标志循环的结尾并引入循环条件。
+
+（2）和while循环不同，do循环时用分号结尾的。这是因为do循环的结尾循环条件，而不是循环体的结束。
+
+**for语句**
+
+```js
+for(initialize;test;increment)
+    statement;
+//等价于while循环
+initialize;
+while(test){
+    statement;
+    increment;
+}
+
+for(i=0,j=10;i<10;i++,j--)
+    sum+=i*j;
+```
+
+**for/in语句**
+
+```js
+var obj={a:1,b:"hello",c:true};
+for(var key in obj)
+    console.log("obj["+key+"]="+obj[key]);
+
+
+var a=new Array();
+var i=0;
+for(a[i++] in obj);//空循环体
+
+
+console.log(i);//3
+for(i in a)
+    console.log(i,a[i]);
+/*
+0 "a"
+1 "b"
+2 "c"
+*/
+```
+
+注意：for/in循环中的variable可以时任意的表达式，只要他的值适用于赋值表达式的赋值表达式即可。
+
+**标签语句**
+
+被标记的语句通常都是那些循环语句，即while，do/while、for和for/in语句。通过给循环命名，就可以使用break，continue退出循环或退出循环的某一次迭代。
+
+```js
+identifier:statement
+//identifier可以时任何合法的JavaScript标识符，不可一世保留字
+myAction:
+while(token!=null){
+    //statement
+}
+
+```
+
+**break语句**
+
+break会使程序立刻退出包含在最内层的循环或退出一个switch语句,break后可以跟标签名，退出对应标签名的循环。
+
+```js
+for(i=0;i<a.length;i++){
+    if(a[i]==target){
+        break;
+    }
+}
+
+switch(n){
+    case 1:
+        console.log("n=1");
+    case 2:
+        console.log("n=2")
+        break;
+    default:
+        console.log("n=?")
+}
+/*
+当输入n=1时
+结果:n=1,n=2
+当输入n=2时
+结果:n=2
+当输入n=3时
+结果:n=?
+*/
+var val=0;
+myAction:
+while(true){
+    console.log(val);
+    if(val==3){
+       break myAction; 
+    }    
+    val++;
+}
+//0 1 2 3
+
+outerloop:
+for(var i=0;i<10;i++){
+    innerloop:
+    for(var j=0;j<10;j++){
+        if(j>3)break;
+        if(i==2)break innerloop;
+        if(i==4)break outerloop;
+        console.log(i,"+",j,"=",i+j);
+    }
+}
+/*
+0+0=0
+0+1=1
+0+2=2
+0+3=3
+1+0=1
+1+1=2
+1+2=3
+1+3=4
+//j>3 break innerloop
+//i==2 break innerloop
+3+0=3
+3+1=4
+3+2=5
+3+3=6
+//i==4 break outerloop
+*/
+```
+
+**continue语句**
+
+continue语句只能用在while、do/while、for、for/in的循环体之中，再其他地方使用它会引起语法错误。
+
+执行continue时，封闭循环的当前跌掉会被终止，开始执行下次迭代。
+
+- 在while循环体中，会再次检测循环开头的expression，如果他是true，见从头开始执行循环体。
+- 在do/while循环体中，会跳到循环的底部，在顶部开始下次循环之前，会在此先检测循环条件。
+- 在for循环中，先计算increment表达式，然后再检测test表达式以确定是否应该执行下次迭代。
+- 在for/in循环中，将以下一个付给循环变量的属性名再次开始新的迭代。
+
+```js
+for(var i=0;i<10;i++){
+    if(i==5){
+        continue;
+    }
+    console.log(i);//1~4 6~9 跳过5
+}
+
+outerloop:
+for(var i=0;i<4;i++){
+    innerloop:
+    for(var j=0;j<5;j++){
+        if(j==1)continue;
+        if(i==2)continue outerloop;
+        if(j==3)continue innerloop;
+        console.log(i,j)
+    }
+}
+/*
+0 0
+// j==1 continue innerloop
+0 2
+//j==3 continue innerloop
+0 4
+1 0
+// j==1 continue innerloop
+1 2
+//j==3 continue innerloop
+1 4
+// i==2 continue outerloop
+3 0
+// j==1 continue innerloop
+3 2
+//j==3 continue innerloop
+3 4
+*/
+```
+
+**function和return**   
+
+```js
+console.log(f(4));//16=>function f(x)
+var f=0;
+function f(x){return x*x;}
+console.log(f)//0 =>var f
+
+funciton showObj(obj){
+    if(obj==null)return;//终止函数执行
+    console.log(obj)
+}
+```
+
+**throw和try/catch/finally**
+
+```js
+function factorial(x){
+    if(x<0) throw new Error("x must not be negative");
+    for(var f=1;x>1;f*=x,x--)/*empty*/;
+        
+        return f;
+}
+console.log(factorial(4));//24
+```
+
