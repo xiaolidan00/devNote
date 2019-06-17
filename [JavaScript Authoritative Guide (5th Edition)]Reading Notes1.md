@@ -783,5 +783,152 @@ alert("Outline:"+book.title+"\n"+
      "Chapter 1"+book.chapter1.title+"\n"+
      "Chapter 2"+book.chapter2.title);
 book.title="My JavaScript";
+
+//属性枚举
+function displayPropsName(obj){
+    var names="";
+    for(var name in obj)name+=name+"\n";
+    console.log(name);
+}
+//for/in循环列出的属性并没有特定的顺序，虽能美剧出所有用户定义的属性，但不能美剧出某些预定义的属性和方法。
+
+//检查属性的存在性
+if("x" in point) console.log("there is attribute x in object point");
+if(point.x!==undefined)console.log("there is attribute x in object point");
+if(point.drawCircle)point.drawCircle();
+
+//删除属性
+delete book.chapter2;//删除属性不仅是把属性设置为undefined，实际上是从对象一处了属性，在删除后，for/in将不会枚举该属性，并且in运算符也不会检测到该属性。
+
+//作为关联数组的对象
+object.property
+object["property"]
+
+var addr="";
+for(i=0;i<4;i++){
+    addr+=customer["address"+i]+"\n"
+}
+
+
+var value=0;
+for(stock in portfolio){
+    value+=get_share_value(stock)*portfolio(stock);
+}
 ```
+
+**通用的Object属性和方法**
+
+```js
+//constructor属性
+var d=new Date();
+d.constructor==Date;//true
+
+if((typeof o=="object")&&(o.constructor==Date)){//确认未知值的类型为Date
+    
+}
+
+if((typeof o=="object")&&(o instanceof Date)){//确认未知值的类型为Date
+    
+}
+
+//toString()方法
+//使用+把字符串与对象连接或者alert()传递一个对象时对象会调用toString()
+var s={x:1,y:2}.toString();//"[object Object]"默认toString()并不能显示太多信息。
+
+//hasOwnProperty()方法
+//如果对象用一个单独的字符串参数指定的名字来本地定义一个非继承的属性，hasOwnProperty方法就返回true,否则false
+var o={};
+o.hasOwnProperty("undef");//false
+o.hasOwnProperty("toString");//false
+Math.hasOwnProperty("cos");//true
+
+//propertyIsEnumerable()方法
+//如果对象用一个单独的字符串参数所指定的名字来定义一个非继承的属性，并且如果这个属性可以在for/in循环中枚举，propertyIsEnumerable()返回true,否则false
+//注意，一个对象的所有的用户定义的属性都是可以枚举的，不能枚举的属性通常都是继承的属性。这个方法几乎总会和hasOwnProperty()返回相同结果
+var o={x:1};
+o.propertyIsEnumerable("x");//true
+o.propertyIsEnumerable("y");//false
+o.propertyIsEnumerable("valueOf");//false
+
+//isPrototypeOf()方法
+//如果isPrototypeOf()方法所属于的对象时参数的原型对象，那么返回true,否则false
+var o={};
+Object.prototype.isPrototypeOf(o);//true o.constructor==Object
+Object.isPrototypeOf(o);//false
+o.isPrototypeOf(Object.prototype);//false
+Function.prototype.isPrototypeOf(Object);//true Object.constructor=Function
+```
+
+
+
+**数组**
+
+数组时一个有序的、值的集合，每个值叫做一个元素，每个元素在数组中都有一个数字化位置，叫做下标。一个数组的元素可以具有任意的数据类型，同意数组的不同元素可以具有不同的类型。数组可以包含其他数组。
+
+```js
+var primes=[2,3,4,5];
+var music=[1.2,"abc",false];
+var base=1024;
+var table=[base,base+1,base+2,base+3];
+var b=[[1,{x:1,y:2}],[2,{x:3,y:4}]];
+var count=[1,,3];//3个元素，中间的为未定义
+var undefs=[,,,,];//五个未定义元素
+
+//创建数组的另一种方式使用Array()构造函数
+//无参数
+var a=new Array();//无元素的空数组，等价于[]
+//显式地指定数组前n个怨怒是的值
+var a=new Array(1,2,3.3,"test");//数组赋值时时从元素0开始
+//传递给它一个数字参数，指定数组的长度
+var a=new Array(10);//十个undefined元素的数组
+
+//数组元素的读写
+value=a[0];
+a[1]=3.14;
+i=2;
+a[i]=3;
+a[i+1]="hello";
+a[a[i]]=a[0];
+my['abc']*=2;//my.abc=my.abc*2;
+a[-1.23]=true;//=>a["-1.23"]=true
+
+
+//添加数组新元素 JavaScript数组时习俗的，意味着数组的下标不许连续的数字范围
+a[10]=1;
+a[0]=111;
+a[10000]="test";
+//数组元素也可以被添加到对象中
+var c=new Circle(1,2,3);
+c[0]="hahaha";//定义名为"0"的对象属性
+
+//删除数组元素
+delete a[0];
+Array.shift();//删除数组的第一个元素
+Array.pop();//删除数组的最后一个元素
+Array.splice();//删除数组中连续范围的元素
+
+
+//数组的长度
+var a=new Array();//a.length==0
+a=new Array(10);////a.length==10 10个未定义元素
+a=new Array(1,2,3);//a.length==3
+a=[4,5];//a.length==2
+a[5]=-1;//a.length==6 3个未定义元素  [4, 5, empty × 3, -1]
+a[49]=0;//a.length==50 46个未定义元素 [4, 5, empty × 3, -1, empty × 43, 0]
+
+//遍历数组
+var fruits=["mango","banana","cherry","pear"];
+for(var i=0;i<fruits.length;i++){
+    console.log(fruits[i]);
+}
+
+for(var i=0;i<fruits.length;i++){
+    if(fruits[i])console.log(fruits[i]);
+}
+
+var lookup_table=new Array(1024);
+for(var i=0;i<lookup_table.length;i++)
+    lookup_table[i]=parseInt(Math.random());
+```
+
 
