@@ -679,5 +679,109 @@ function factorial(x){
         return f;
 }
 console.log(factorial(4));//24
+console.log(factorial(-4));//Uncaught Error: x must not be negative
+
+try{
+    var n=prompt("please enter a positive integer:");
+    var f=factorial(n);
+    alert(n+"!="+f);
+}catch(e){
+    console.log(e);//Error: x must not be negative
+}
+//finally块中包括清楚代码，无论try从句中是否由break；continue，return，finally代码块都会被执行。
+var i=0,total=0;
+while(i<a.length){
+    try{
+        if(typeof a[i]!="number"||isNaN(a[i]))
+            continue;
+        total+=a[i];
+    }finally{
+        i++;//即使使用了continue，还是会执行i++
+    }
+}
+```
+
+**with语句**
+
+with暂时修改作用域链
+
+```js
+with(object)
+    statement;
+```
+
+将object添加到作用域链头部，然后执行statement，再把作用于恢复到原始状态。
+
+```js
+frames[1].document.forms[0].address.value;
+
+with(frames[1].document.forms[0]){
+    name.value="";
+    address.value="";
+    email.value="";
+}
+//等价于
+var form=frames[1].document.forms[0];
+form. name.value="";
+form.address.value="";
+form.email.value="";
+```
+
+**JavaScript语句小结**
+
+| 语句     | 语法                                                         | 用途                                                    |
+| -------- | ------------------------------------------------------------ | ------------------------------------------------------- |
+| break    | break；break label；                                         | 推出最内层循环或退出switch语句，或退出label指定的循环。 |
+| case     | case expression：                                            | switch语句中标记一个语句                                |
+| continue | continue;continue label;                                     | 重新开始最内层循环或重新开始label指定的循环；           |
+| default  | defalut:                                                     | switch中标记默认语句                                    |
+| do/while | do statement while(expression);                              | while循环的一种替代形式                                 |
+| 空语句   | ;                                                            | 什么都不干                                              |
+| for      | for(initialize;test;increment)statement                      | 一种易用的循环                                          |
+| for/in   | for(variable in object)statement                             | 遍历一个对象的属性                                      |
+| function | function funName(\[arg1,\[……,argn\]\]){statements}           | 声明一个函数                                            |
+| if/else  | if(expression)statement1 \[else statement2\]                 | 有条件的执行代码                                        |
+| label    | identifier:statement                                         | 给statement指定一个名字identifier                       |
+| return   | return  \[expression\];                                      | 由函数返回或由函数返回expression的值                    |
+| switch   | switch(expression){statements}                               | 用case或default语句标记的多分支语句                     |
+| throw    | throw expression；                                           | 抛出一个异常                                            |
+| try      | try{statements}catch(identifier){statements}finally{statements} | 捕捉一个异常                                            |
+| var      | var name1\[=value1\]\[,……，nameN\[=valueN\]\]                | 声明或者初始化变量                                      |
+| while    | while(expression)statement                                   | 一种基本循环结构                                        |
+| with     | with(object){statement}                                      | 扩展作用域链（不推荐）                                  |
+
+### 第7章对象和数组
+
+对象是一种复合数据类型，它们将多个数据值集中在一个单元中，而且允许使用名字来存取这些值。
+
+对象是一个无序的属性集合，每个属性都有自己的名字和值。存储在对象中的已命名的值既可以是数字和字符串这样的原始值，也可以是对象。
+
+```js
+var empty={};
+var point={x:0,y:0};
+var circle={x:point.x,y:point.y+1,radius:2};
+var homer={
+    "name":"Homer Simpson",
+    "age":34,
+    "married":true,
+    "occupation":"plant operator",
+    "email":"homer@example.com"
+};
+
+var a=new Array();
+var d=new Date();
+var r=new RegExp("javascript","i");
+
+var book={};
+book.title="JavaScript";
+book.chapter1=new Object();
+book.chapter1.title="Introduction to JavaScript";
+book.chapter1.pages=11;
+book.chapter2={title:"Lexical Structure",pages:6}
+
+alert("Outline:"+book.title+"\n"+
+     "Chapter 1"+book.chapter1.title+"\n"+
+     "Chapter 2"+book.chapter2.title);
+book.title="My JavaScript";
 ```
 
