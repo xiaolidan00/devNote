@@ -264,7 +264,7 @@ q=a?b:(c?d:(e?f:g));
 
 **in 运算符**
 
-in运算符要求其左边的运算数是一个字符串，或者可以被转换成字符串，右边的运算数是一个对象或数组。如果该运算符左边的值是其右边对象的一个属性名，则返回true；
+in运算符要求其左边的运算数是一个字符串，或者可以被转换成字符串，右边的运算数是一个对象或数组。如果该运算符左边的值是其右边对象的一个属性名，则返回true;
 
 ```js
 var point={x:1,y:2};
@@ -688,7 +688,7 @@ try{
 }catch(e){
     console.log(e);//Error: x must not be negative
 }
-//finally块中包括清楚代码，无论try从句中是否由break；continue，return，finally代码块都会被执行。
+//finally块中包括清楚代码，无论try从句中是否由break;continue，return，finally代码块都会被执行。
 var i=0,total=0;
 while(i<a.length){
     try{
@@ -731,9 +731,9 @@ form.email.value="";
 
 | 语句     | 语法                                                         | 用途                                                    |
 | -------- | ------------------------------------------------------------ | ------------------------------------------------------- |
-| break    | break；break label；                                         | 推出最内层循环或退出switch语句，或退出label指定的循环。 |
+| break    | break;break label;                                         | 推出最内层循环或退出switch语句，或退出label指定的循环。 |
 | case     | case expression：                                            | switch语句中标记一个语句                                |
-| continue | continue;continue label;                                     | 重新开始最内层循环或重新开始label指定的循环；           |
+| continue | continue;continue label;                                     | 重新开始最内层循环或重新开始label指定的循环;           |
 | default  | defalut:                                                     | switch中标记默认语句                                    |
 | do/while | do statement while(expression);                              | while循环的一种替代形式                                 |
 | 空语句   | ;                                                            | 什么都不干                                              |
@@ -744,7 +744,7 @@ form.email.value="";
 | label    | identifier:statement                                         | 给statement指定一个名字identifier                       |
 | return   | return  \[expression\];                                      | 由函数返回或由函数返回expression的值                    |
 | switch   | switch(expression){statements}                               | 用case或default语句标记的多分支语句                     |
-| throw    | throw expression；                                           | 抛出一个异常                                            |
+| throw    | throw expression;                                           | 抛出一个异常                                            |
 | try      | try{statements}catch(identifier){statements}finally{statements} | 捕捉一个异常                                            |
 | var      | var name1\[=value1\]\[,……，nameN\[=valueN\]\]                | 声明或者初始化变量                                      |
 | while    | while(expression)statement                                   | 一种基本循环结构                                        |
@@ -1031,9 +1031,9 @@ a.shift();//return 1;a=[]
 
 
 //indexOf()方法和lastIndexOf()快速查找特定值
-[true,"a",1,55].indexOf(1)；//2
-[true,"a",1,55].lastIndexOf(1)；//2
-[true,"a",1,55].lastIndexOf(true)；//0
+[true,"a",1,55].indexOf(1);//2
+[true,"a",1,55].lastIndexOf(1);//2
+[true,"a",1,55].lastIndexOf(true);//0
 
 //forEach()每个元素调用一个指定函数
 var aa=[true,"a",1,55];
