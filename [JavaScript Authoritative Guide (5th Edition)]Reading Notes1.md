@@ -929,6 +929,132 @@ for(var i=0;i<fruits.length;i++){
 var lookup_table=new Array(1024);
 for(var i=0;i<lookup_table.length;i++)
     lookup_table[i]=parseInt(Math.random());
+
+//截断或增长数组
+var a=[1,2,3];
+a.length=2;
+console.log(a);//[1, 2]
+a.length=5;
+console.log(a);//[1, 2, empty × 3]
+
+//多维数组
+var table=new Array(10);
+for(var i=0;i<table.length;i++)
+    table[i]=new Array[10];
+for(var row=0;row<table.length;row++){
+    for(var col=0;col<table[row].length;col++){
+        table[row][col]=row*col;
+    }
+}
+console.log(table[5][7]);//5*7=35
 ```
 
+**数组的方法**
+
+```js
+//join()方法 把数组的所有元素转换成字符串，然后连接起来
+var a=[1,2,3];
+var s=a.join();//"1,2,3"
+var s1=a.join(",");//"1,2,3"
+
+//split()方法，通过一个字符串分割成几个片段来创建数组
+var ss="a=1&b=3&c=5";
+var aa=ss.split("&");//["a=1", "b=3", "c=5"]
+var aaa=aa[0].split("=");//["a", "1"]
+
+//reverse()方法 将颠倒数组元素的顺序并返回颠倒后的数组。
+var a=new Array(1,2,3);//[1,2,3]
+a.reverse();//[3,2,1]
+
+//sort()方法 在原数组上对数组元素进行排序，返回排序后的数组。默认按数字字母顺序对数组元素进行排序
+var a=new Array("banana","cherry","apple");
+a.sort();//["apple", "banana", "cherry"]
+var b=[33,4,111,22];
+b.sort();//[111, 22, 33, 4]
+b.sort(function(a,b){
+    return a-b;
+});//[4, 22, 33, 111]
+
+//concat()方法 创建并返回一个数组，原始数组元素跟随concat()参数,可以是元素或数组
+var a=[1,2,3];//以下操作基于a=[1,2,3]
+a.concat(4,5);//[1,2,3,4,5];
+a.concat([4,5]);//[1,2,3,4,5];
+a.concat([4,5],[6,7]);//[1,2,3,4,5,6,7];
+a.concat(4,[5,[6,7]]);//[1,2,3,4,5,[6,7]];
+
+//slice()方法 返回指定数组片段，或者子数组 第一个参数是截取的开始位置，第二个参数是截取结束的位置
+var a=[1,2,3,4,5];
+a.slice(0,3);//[1,2,3]
+a.slice(3);//[4,5] 第二个参数未定义默认是到最后一个元素
+a.slice(1,-1);//[2,3,4]//第二个参数负数是相对与最后一个元素而言,-1数组的倒数第一个元素=》4
+a.slice(-3,-2);//[3] -3倒数第三个元素=》2，-2倒数第二个元素=》3
+
+//splice()方法 删除或插入数组元素，直接在原数组上修改，不同slice()和concat()那样创建新数组。第一个参数是开始删除位置，第二个参数是删除元素个数，第三个以后参数为插入的元素
+var  a=[1,2,3,4,5,6,7,8];
+a.splice(4);//return [5,6,7,8];  a=[1,2,3,4];第二个参数不指定,默认从开始位置到结尾的所有元素删除
+a.splice(1,2);//return [2,3];a=[1,4];
+a.splice(1,1);//return [4];a=[1];
+var b=[1,2,3,4,5];
+a.splice(2,0,'a','b');//return [];a=[1,2,'a','b',3,4,5];
+a.splice(2,2,[1,2],3);//return ['a','b'];a=[1,2,[1,2],3,3,4,5];
+//与concat()不同，splice()不将插入的数组参数展开，插入还是数组本身。
+
+//push()方法和pop()方法 直接在原数组上修改。
+//push()将一个或多个新元素附加到数组的尾部，然后返回数组的新长度。
+//pop()将删除的数组的最后一个元素，减少数组的长度，返回它删除的值。
+var stack=[];
+stack.push(1,22);//return 2;stack=[1,22] 
+stack.pop();//return 22 ;stack=[1]
+stack.push(3);//return 2;stack=[1,3]
+stack.pop();//return 3;stack=[1];
+stack.push([4,5]);//return 2; stack=[1,[4,5]]
+stack.pop();//return [4,5];stack=[1];
+stack.pop();//return 1;stack=[]
+
+//unshift()方法和shift()方法
+//unshift()将一个或多个元素添加到数组的头部，然后把以由的元素移动到下标较大的位置以腾出空间，它返回的是数组的新长度。
+//shift()删除并返回数组的第一个元素，然后将后面的所有元素都向前移动以填补第一个元素留下的空白。
+var a=[];
+a.unshift(1);//return 1;a=[1]
+a.unshift(22);//return 2;a=[22,1]
+a.shift();//return 22;a=[1]
+a.unshift(3,[4,5]);//return 3;a=[3,[4,5],1]
+a.shift();//return 3;a=[[4,5],1]
+a.shift();//return [4,5];a=[1]
+a.shift();//return 1;a=[]
+
+//toString()方法和toLocaleString()方法
+//注意 toString()返回和无参数的join()方法返回的字符串相同
+//toLocaleString()是toString()局部或的版本，它将调用每个元素的toLocaleString()把数组元素转换成字符串，然后把生成的字符串用特定的分隔符字符串连接起来
+[1,2,3].toString();//"1,2,3"
+[1,[2,"c"]].toString();//"1,2,c"
+
+
+//indexOf()方法和lastIndexOf()快速查找特定值
+[true,"a",1,55].indexOf(1)；//2
+[true,"a",1,55].lastIndexOf(1)；//2
+[true,"a",1,55].lastIndexOf(true)；//0
+
+//forEach()每个元素调用一个指定函数
+var aa=[true,"a",1,55];
+aa.forEach(function(a,b){console.log(a,b)})
+/*
+true 0
+"a" 1
+1  2
+55  3
+undefined
+*/
+
+//map()返回数组中的每个元素传递给指定函数所获取结果的数组
+var aa=[true,"a",1,55];
+aa.map(function(a,b){return a+":"+b;})
+/*
+["true:0", "a:1", "1:2", "55:3"]
+*/
+
+//filter()返回一个给定的断言函数返回tru的元素组成一个数组
+var aa=[true,"a",1,55];
+aa.filter(function(a){return a>0});//[true, 1, 55]
+```
 
