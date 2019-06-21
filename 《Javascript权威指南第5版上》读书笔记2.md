@@ -431,3 +431,23 @@ function constructFunction(){
 console.log(constructFunction()());//global
 ```
 
+
+
+### 第9章 类和模块
+
+```js
+//创建一个新的空对象
+new Object();
+var array=new  Array(10);
+var today=new Date();
+//构造函数的工作是初始化一个新创建的对象，设置在使用对象前需要设置的所有属性。
+function Rectangle(w,h){
+    this.width=w;
+    this.height=h;
+}
+var rect1=new Rectangle(2,4);//rect1={width:2,height:4}
+var rect2=new Rectangle(8.5,11);//rect1={width:8.5,height:11}
+```
+
+
+
