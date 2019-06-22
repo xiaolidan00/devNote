@@ -447,7 +447,44 @@ function Rectangle(w,h){
 }
 var rect1=new Rectangle(2,4);//rect1={width:2,height:4}
 var rect2=new Rectangle(8.5,11);//rect1={width:8.5,height:11}
+
+//原型和继承
+function computeAreaOfRectangle(r){
+    return r.width*r.height;
+}
+
+var r=new Rectangle(8.5,11);
+r.area=function(){return this.width*this.height;}
+var a=r.area();
+
+function Rectangle(w,h){
+    this.width=w;
+    this.height=h;
+    this.area=function(){this.width*this.height;}
+}
+var r=new Rectangle(8.5,11);
+var a=r.area();
+
+function Rectangle(w,h){
+    this.width=w;
+    this.height=h;
+}
+Rectangle.prototype.area=function(){return this.width*this.height;}
+
+var =new Rectangle(2,3);
+r.hasOwnProperty("width");//true
+r.hasOwnProperty("area");//false
+"area" in r;//true
 ```
 
 
+
+| c.area()读取c的area属性 | →    | area并不定义在c自身中，因此观察和c相关的原型对象的属性       | →    | 这里才是area的定义，返回它，就好像它是c自身的属性一样 |
+| ----------------------- | ---- | ------------------------------------------------------------ | ---- | ----------------------------------------------------- |
+| c.pi=4;写入c的pi属性    | →    | pi并不定义在c中，因此将其作为c的自身的新属性创建。A Circle object ,C {r=1.0;x=2.0 |      |                                                       |
+|                         |      |                                                              |      |                                                       |
+|                         |      |                                                              |      |                                                       |
+|                         |      |                                                              |      |                                                       |
+|                         |      |                                                              |      |                                                       |
+|                         |      |                                                              |      |                                                       |
 
