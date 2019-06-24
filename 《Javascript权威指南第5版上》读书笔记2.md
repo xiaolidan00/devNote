@@ -479,12 +479,62 @@ r.hasOwnProperty("area");//false
 
 
 
-| c.area()读取c的area属性 | →    | area并不定义在c自身中，因此观察和c相关的原型对象的属性       | →    | 这里才是area的定义，返回它，就好像它是c自身的属性一样 |
-| ----------------------- | ---- | ------------------------------------------------------------ | ---- | ----------------------------------------------------- |
-| c.pi=4;写入c的pi属性    | →    | pi并不定义在c中，因此将其作为c的自身的新属性创建。A Circle object ,C {r=1.0;x=2.0 |      |                                                       |
-|                         |      |                                                              |      |                                                       |
-|                         |      |                                                              |      |                                                       |
-|                         |      |                                                              |      |                                                       |
-|                         |      |                                                              |      |                                                       |
-|                         |      |                                                              |      |                                                       |
+| c.area()读取c的area属性          | →    | area并不定义在c自身中，因此观察和c相关的原型对象的属性       | →    | 这里才是area的定义，返回它，就好像它是c自身的属性一样 |
+| -------------------------------- | ---- | ------------------------------------------------------------ | ---- | ----------------------------------------------------- |
+|                                  |      | A Circle object ,C{r=1.0,x=2.0,y=3.0}                        | →    | ↓                                                     |
+| c.pi=4;写入c的pi属性             | →    | pi并不定义在c中，因此将其作为c的自身的新属性创建。           |      | ↓                                                     |
+|                                  |      | A Circle object ,C {r=1.0,x=2.0,y=3.0,pi=4}                  |      | 原型对象Circle.prototype{area=Circle_area,pi=3.14159} |
+| a=c.pi\*c.r\*c.r读取c的pi和r属性 | →    | pi和r定义在c自身中，因此可以返回在那里找到的值，而不必再费劲查看原型对象 |      | ↑                                                     |
+|                                  |      | A Circle object ,d{r=2.1,x=0.0,y=0.0}                        | →    | ↑                                                     |
+| a=d.pi\*d.r\*d.r读取d的pi和r属性 | →    | pi并不定义在d自身中，因此查看和d相关的原型对象和属性，r定义在d中，因此，返回这个值而不必查看原型 | →    | 这里是pi的定义，返回它的值，就好像它真的是d的一个属性 |
 
+**扩展内建类型**
+
+```js
+String.prototype.endsWidth=function(c){
+    return (c==this.charAt(this.length-1));
+}
+var message="Hello World";
+message.endsWidth("h");//false
+message.endsWidth("d");//true
+```
+
+注意：不能为Object.prototype添加属性，所添加的任何属性和方法都可以用一个 for/in循环来枚举，将他们添加到Object.prototype就会使它们再每个单个的Javascript对象中都可见。一个空的对象{}应该没有枚举属性，任何添加到Object.prototype的内容都会变成这个空对象的一个可枚举属性，那么把对象用作关联数组的代码可能会产生问题。
+
+```js
+//IE 4&5 无法使用Function.apply()
+if(!Function.prototype.apply){
+    Function.prototype.apply=function(object,parameters){
+	var f=this;
+        var o=object||window;
+        var args=parameters||[];
+        o._$_apply_$_=f;
+        var argList=stringArgs.join(",");
+        var methodcall="o._$_apply_$_{"+argList+"};";
+        var result=eval(methodcall);
+        delete o._$_apply_$_;
+        return result;
+   }
+}
+
+//Firefox1.5实现新的数组方法 Array.map()
+if(!Array.prototype.map){
+    Array.prototype.map=function(f,thisObject){
+        var results=[];
+        for(var len=this.length,i=0;i<len;i++){
+            result.push(f.call(thisObject,this[i],i,this));
+        }    
+        return results;
+        }
+    
+    }// Array.prototype.map
+}//if(!Array.prototype.map)
+```
+
+**实例方法**
+
+一个实例方法的实现使用this关键紫来引用调用它时所给予的所有对象或实例。一个实例方法可以针对类的任何实例来调用，但是，这并不意味者每个对象都包含该方法的一份自己的私有拷贝，这就是和对实例属性一样。相反，每个实例方法由一个类的所有实例来共享。再JavaScript中，通过构造函数的原型对象中一个属性设置为一个函数之，从而定义了一个实例方法。通过这种方法，构造函数所创造的所有对象都共享一个继承的执行该函数的引用，并且可以使用前面描述的方法调用语法来调用该函数。
+
+在java和c++中，实例方法的作用域包括this对象。
+
+在JavaScript中这些属性显式地指定this关键字。
