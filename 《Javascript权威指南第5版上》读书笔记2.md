@@ -538,3 +538,66 @@ if(!Array.prototype.map){
 在java和c++中，实例方法的作用域包括this对象。
 
 在JavaScript中这些属性显式地指定this关键字。
+
+每个类属性都只有一根拷贝，类属性本质上是全局的，类方法也是全局的。
+
+类方法时通过一个构造函数来调用的，this关键字并不引用类的任何具体的实例，它引用的时构造函数自身。通常一个类的方法根本不使用this。
+
+```js
+//通过构造函数自身的一个属性来模拟Javascript中的一个属性
+Rectangle.UNIT=new Rectangle(1,1);
+
+//Circle类
+function Circle(radius){
+this.r=radius;
+}
+Circle.PI=3.14159;
+Circle.prototype.area=function(){return Circle.PI*this.r*this.r;}
+Circle.max=function(a,b){
+    if(a.r>b.r)return a;
+    else return b;
+}
+var c=new Circle(1.0);//r=1.0
+c.r=2.2;//r=2.2
+var a=c.area();//a=15.205295600000001
+var x=Math.exp(Circle.PI);//x=23.14063122695496
+var d=new Circle(1.2);//r=1.2
+var bigger=Circle.max(c,d);//c
+
+//复数类
+function Complex(real,imaginary){
+    this.x=real;
+    this.y=imaginary;
+}
+Complex.prototype.magnitude=function(){
+    return Math.sqrt(this.x*this.x+this.y*this.y);
+}
+Complex.prototype.negative=function(){
+    return Complex(-this.x,-this.y);
+}
+Complex.prototype.add=function(that){
+    return new Complex(this.x+that.x,this.y+that.y);
+}
+Complex.prototype.multiply=function(that){
+    return new Complex(this.x*that.x-this.y*that.y,this.x*that.y+this.y*that.x);
+}
+Complex.prototype.toString()+function(){
+    return "("+this.x+","+this.y+")";
+}
+Complex.prototype.equals=function(that){
+    return this.x==that.x&&this.y==that.y;
+}
+Complex.prototype.valueOf=function(){
+    return this.x;
+}
+Complex.sum=function(a,b){
+return new Complex(a.x+b.x,a.y+b.y);
+}
+Complex.produce=function(a,b){
+    return new (a.x*bx-a.y*b*y,a.x*b.y+a.y*b.x);
+}
+Complex.ZERO=new Complex(0,0);
+Complex.ONE=new Complex(1,0);
+Complex.I=new Complex(0,1);
+```
+
