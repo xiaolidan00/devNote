@@ -601,3 +601,262 @@ Complex.ONE=new Complex(1,0);
 Complex.I=new Complex(0,1);
 ```
 
+**私有成员**
+
+数据封装，将属性变为私有的，并且通过专门的accessor方法才能读取和写入它们。
+
+```js
+//不可变Rectangle对象，宽高不可变，只能通过accessor方法访问。
+function ImmutableRectangle(w,h){
+    this.getWidth=function(){return w;};
+    this.getHeight=function(){return h;};
+}
+ImmutableRectangle.prototype.area=function(){
+    return this.getWidth()*this.getHeight();
+}
+```
+
+**通用对象模型**
+
+```js
+Circle.prototype.toString=function(){
+    return "[Circle of radius "+this.r+" ,centered at ("+this.x+","+this.y+").]";
+}
+var a=new Complex(5,4);
+var b=new Complex(2,1);
+var c=Complex.sum(a,b);// (7,5)
+var d=a+b;//7
+```
+
+compareTo()应该接受一个单独的参数并且将这个参数和调用该方法所基于的对象进行比较。如果this对象小于参数对象，compareTo()应该返回一个小于0的值，如果this对象比参数对象大，该方法应该返回一个大于0 的值，如果两个对象相等，该帆帆应该返回0.
+
+| 替代这个 | 使用这个          |
+| -------- | ----------------- |
+| a<b      | a.compareTo(b)<0  |
+| a<=b     | a.compareTo(b)<=0 |
+| a>b      | a.compareTo(b)>0  |
+| a>=b     | a.compareTo(b)>=0 |
+| a==b     | a.compareTo(b)==0 |
+| a!=b     | a.compareTo(b)!=0 |
+
+```js
+Complex.prototype.compareTo=function(that){
+    if(!that||!that.magnitude||typeof that.magnitude !="function")
+        throw new Error("bad argument to Complex.compareTO()");
+    return this.magnitude()-that.magnitude();
+}
+//Array.sort()
+complexNumbers.sort(new function(a,b){return a.compareTo(b)});
+//另一种定义
+Complex.compare=function(a,b){return a.compareTo(b);};
+complexNumbers.sort(Complex.compare);
+
+//1+0i和0+1i具有相同的模但实际值不相同
+Complex.prototype.compareTo=function(that){
+    var result=this.x-that.x;
+    if(result==0)
+        return =this.y-that.y;
+        
+    return result;
+}
+```
+
+**超类和子类**
+
+在JavaScript中，Object类是最通用的类，其他所有类都是专用化了的版本，或者说是Object的子类，另一种解释：Object是所有内建类的超类。所有类都从Object继承一些基本方法。
+
+```js
+function Rectangle(w,h){
+    this.width=w;
+    this.height=h;
+}
+Rectangle.prototype.area=function(){return this.width*this.height;}
+function PositionedRectangle(x,y,w,h){
+    Rectangle.call(this,w,h);//调用超类
+    this.x=x;
+    this.y=y;
+}
+PositionedRectangle.prototype=new Rectangle();
+delete PositionedRectangle.prototype.width;
+delete PositionedRectangle.prototype.height;
+
+PositionedRectangle.prototype.constructor=PositionedRectangle;
+
+PositionedRectangle.prototype.contains=function(x,y){
+    return (x>this.x&&x<this.x+this.width&&y>this.y&&y<this.y+this.height);
+}
+
+var r=new PositionedRectangle(2,2,2,2);
+print(r.contains(3,3));//true
+print(r.area());//4
+print(r.x+","+r.y+","+r.width+","+r.height);//2,2,2,2
+r instanceof PositionedRectangle //true
+r instanceof Rectangle //true
+r instanceof Object//true
+
+//构造函数显式地调用超类的构造函数=》构造函数链
+PositionedRectangle.prototype.superclass=Rectangle;
+//等价
+function PositionedRectangle(x,y,w,h){
+    this.superclass(w,h);
+    this.x=x;
+    this.y=y;
+}
+
+//调用被覆盖的方法
+Rectangle.prototype.toString=function(){
+    return '['+this.width+','+this.height+']';
+}
+//超类的toString()的实现是超类的原型对象的一个属性，无法直接调用该方法，二十通过apply()调用该方法
+PositionedRectangle.prototype.toString=function(){
+    return "{"+this.x+","+this.y+"}"+Rectangle.prototype.toString.apply(this);
+}
+PositionedRectangle.prototype.toString=function(){
+    return "{"+this.x+","+this.y+"}"+this.supperClass.prototype.toString.apply(this);
+}
+```
+
+**非继承的扩展**
+
+```js
+//从一个类借用方法供另一个类使用
+function borrowMethods(borrowForm,addTo){
+    var from borrowFrom.prototype;
+    var to=addTo.prototype;
+    for(m in from){
+	if(type of from[m]!="function") continue;
+        to[m]=from[m];
+    }
+}
+
+//带通用的供借用的方法的混入类
+function GenericToString(){}
+GenericToString.prototype.toString=function(){
+    var props=[];
+    for(var name in this){
+if(!this.hasOwnProperty(name))continue;
+        var value=this[name];
+        var s=name+":";
+        switch(typeof value){
+            case 'function':
+                s+="function";
+                break;
+            case 'object':
+                if(value instanceof Array)s+="array"
+                else s+=value.toString();
+                break;
+            default:
+                s+=String(value);
+                break;
+        }
+        props.push(s);
+    }
+    return "{"+props.join(",")+"}";
+}
+
+
+function GenericEquals(){}
+GenericEquals.prototype.equals=function(that){
+    if(this==that) return true;
+    var propsInThat=0;
+    for(var name in that){
+        propsInThat++;
+        if(this[name]!==that[name])return false;
+    }
+    var propsThis=0;
+    for(name in this)propsInThis++;
+    if(propsInThis!=propsInThat)return false;
+    return true;
+}
+
+function Rectangle(x,y,w,h){
+    this.x=x;
+    this.y=y;
+    this.width=w;
+    this.height=h;
+}
+Rectangle.prototype.area=function(){return this.width*this.height;}
+borrowMethods(GenericEquals,Rectangle);
+borrowMethods(GenericToString,Rectangle);
+
+function Colored(c){this.color=c;}
+Colored.prototype.getColor=function(){return this.color;}
+function ColoredRectangle(x,y,w,h,c){
+    this.superclass(x,y,w,h);
+    Colored.call(this,c);
+}
+ColoredRectangle.prototype=new Rectangle();
+ColoredRectangle.prototype.constructor=ColoredRectangle;
+ColoredRectangle.prototype.superclass=Rectangle;
+borrowMethods(Colored,ColoredRectangle);
+```
+
+**确定对象类型**
+
+typeof 从对象中区分出基本类型,任何函数类型都是function，任何数组的类型都是object
+
+```js
+typeof null//object
+typeof undefined//undefined
+```
+
+instanceof左侧是测试值，右侧是类的构造函数。注意，对象是它自己的类的一个实例，也是任何超类的一个实例。
+
+```js
+o instanceof Object//true o为任何对象
+typeof f=='function'//true
+f instanceof Function//true
+f instanceof Object //true
+
+var d=new Date();
+var isobj=d instanceof Object;//true
+var realobj=d.constructor==Object;//false
+```
+
+instanceof 和constructor属性的缺点是它们只能允许根据已知的类来进行测试对象，无法检测位置的对象。
+
+Object.toString()，toString()支队内建的对象类型有效，在Object.prototype中显式地引用默认函数，并使apply()在感兴趣的对象上调用它。
+
+```js
+Object.prototype.toString.apply(o);
+
+//扩展的typeof测试
+function getType(x){
+    if(x==null) return "null";
+    
+    var t=typeof x;
+    if(t!="object") return t;
+    var c=Object.prototype.toString.apply(x);//return "[object calss]"
+    c=c.substring(8,c.length-1);//"class"
+    if(c!="Object")return c;
+    if(x.constructor==Object) return c;
+    if("classname" in x.constructor.prototype&&
+      typeof x.constructor.prototype.classname=="string")
+        return "<unknown type>";
+}
+```
+
+鸭子类型识别
+
+```js
+//测试一个对象是否借用一个类的方法
+function borrows(o,c){
+    if(o instanceof c)return true;
+    if(c==Array||c==Boolean||c==Date||c==Error||c==Function||c==Number||c==RegExp||c==String)
+        return undefined;
+    if(typeof o=="function") o=o.prototype;
+    var proto=c.prototype；
+    for(var p in proto){
+	if(type of proto[p]!="function") continue;
+        if(o[p]!=proto[p])return false;
+    }
+    return true;
+}
+
+//测试一个对象是否提供了方法
+function provides(o,c){
+    if(o instanceof c)return true;
+    if(typeof o=="function")o=o
+}
+```
+
