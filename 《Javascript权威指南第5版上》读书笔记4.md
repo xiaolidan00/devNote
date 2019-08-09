@@ -319,5 +319,46 @@ text.replace(quote,"``$1''");
 
 //match()唯一的参数是正则表达式，返回一个包含匹配结果的数组，若设置的标志g，则返回所有出现的匹配项
 "1 plus 2 equals 3".match(/\d+/g);//["1","2","3"]
+
+//解析url
+var url=/(\w+):\/\/(\w.|+)\/(\S*)/;
+var text="Visit my blog at http://./www.example.com/~david";
+var result=text.match(url);
+if(result!=null){
+    var fullurl=result[0];
+    var protocol=result[1];
+    var host=result[2];
+    var path=result[3];
+}
+
+"1,2,3,4,5".split(',');//["1","2","3","4","5"]
+"1,2,3,4,5".split(/\s*,\s*/);//["1","2","3","4","5"]
+
+//RegExp对象
+var zipcode=new RegExp("\\d{5}","g");
+var zipcode=/\d{5}/g;
+
+var pattern=/Java/
+var text="JavaScript is more fun than Java";
+var result;
+while((result=pattern.exec(text))!=null){
+    console.log("Matched "+result[0]+" at postion"+result.index+" next search begins at "+patter.lastIndex);
+}
+
+var pattern=/java/i;
+pattern.test("JavaScript");//true
+
 ```
+
+### 第13章 Web浏览器中的Javascript
+
+**客户端JavaScript**
+
+- 作为全局对象的Window对象和客户端Javascript代码的全局执行环境
+- 客户端对象的层次和构成它的一部分的文档对象模型(DOM)
+- 事件驱动的编程模型
+
+Window对象是位于作用域链头部的全局对象，Javascript中的所有客户端对象都是作为其他对象的属性存取的。
+
+
 
